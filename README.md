@@ -12,7 +12,7 @@ Egy egyszerű, interaktív 3D-s demonstráció, ahol egy focilabdát rúghatsz k
 - 🌱 **Fű-sík** – a pálya zöld fűvel van borítva, sík felület a `y=0` síkban  
 - 🎮 **Kamera-vezérlés** – WASD: előre/hátra/balra/jobra, nyilakkal a forgatás kényelmes finomítása  
 
-## Követelmények
+## Eszközök
 
 - C11-kompatibilis fordító (pl. `gcc` ≥ 9)  
 - [GLFW](https://www.glfw.org/), [GLEW](http://glew.sourceforge.net/), [OpenGL 3.3+](https://www.opengl.org/)  
