@@ -1,153 +1,118 @@
-# 3D Focipálya Szimuláció
+3D Büntetőfoci – OpenGL játék
+Készítette:
+Név: Dobozi Botond
+Neptun kód: HYS4P5
 
-Egy interaktív, OpenGL alapú demonstráció, amelyben egy büntetőpontról rúgható focilabda szerepel, valósághű pályaelemekkel (büntetőterület, kapu, háló), füst-effekttel gólnál, és stadion–skybox háttérrel.
 
----
+Projekt leírása
+Ez a projekt egy egyszerű 3D-s büntetőrúgó focijáték OpenGL-lel, saját shaderekkel és interaktív kamerával.
+A játékos egy stadionban találja magát, ahol a cél minél több gólt rúgni a kapusnak.
+A játék tartalmaz mozgatható kamerát, dinamikus fényerőt, animált füst-effekteket, gól/miss/győzelem/vesztés overlay-eket és segéd (help) képernyőt.
 
-## 📋 Tartalom
+Játék menete
+A labdát a játékos egy képernyőn megjelenő nyíllal célozza, majd rúgja kapura.
 
-1. [Áttekintés](#áttekintés)  
-2. [Főbb funkciók](#főbb-funkciók)  
-3. [Megvalósítás részletei](#megvalósítás-részletei)  
-   - Kamera- és inputkezelés  
-   - Labdafizika és ütközés  
-   - Füst részecskerendszer  
-   - Pályaelemek és skybox  
-   - Shaderek  
-4. [Projekt struktúra](#projekt-struktúra)  
-5. [Fordítás & futtatás](#fordítás--futtatás)  
-6. [Vezérlés](#vezérlés)  
-7. [Licenc](#licenc)  
+A kapuban egy jobbra-balra mozgó kapus található, aki próbálja hárítani a lövéseket.
 
----
+Ha 5 gólt rúgsz, megnyered a játékot, ha 5-öt véd a kapus, veszítesz.
 
-## Áttekintés
+Füstpartikula-effekt jelenik meg gól esetén.
 
-A program C11 és OpenGL 3.3 Core Profile alatt fut. A felhasználó a WASD gombokkal mozgatja a kamerát, SPACE-szel rúghatja a labdát, a nyilakkal finomhangolható a nézőpont. A pálya talaját egy zöld sík (fű), a környezetet stadion‐skybox adja, míg a kapu és háló lineáris primitívekből épül fel. A labda fizikailag viselkedik gravitáció és fékezés hatására, gól esetén füstfelhő és automatikus újraindítás következik.
+Főbb funkciók
+3D modellbetöltés: A labda .obj fájlból, saját textúrával töltődik be.
 
----
+Textúrázás: Saját generált fehér-fekete „focilabda” textúra (ball_diffuse.png), illetve stadion háttér (stadium.png).
 
-## Főbb funkciók
+Shader-ek: Minden fő objektumhoz külön vertex/fragment shader.
 
-- **Stadion skybox** – környezeti kocka 6 oldallal, stadion textúrákkal  
-- **Zöld talaj** – a `y=0` síkban kirajzolt zöld quad (fű)  
-- **Mozgó labda** – gravitáció, ütközés a talajjal, hálóval, kerettel; rugóerő SPACE-szel  
-- **Kamera-vezérlés** – WASD (mozgás), nyilak (forgatás), scroll (zoom)  
-- **Füst-effekt** – egyszerű részecskerendszer gólnál  
-- **Gól-animáció** – 200 részecske, “GOAL!!!” üzenet, 2 mp után reset  
+Fényerő: A jelenet fényereje dinamikusan állítható a + és - gombokkal.
 
----
+Részecske rendszer: Egyszerű füst-effekt partikularendszerrel, amikor gól születik.
 
-## Megvalósítás részletei
+HUD: Konzolos és overlayes visszajelzés az aktuális állásról, segítség overlay.
 
-### Kamera- és inputkezelés
+Animált kapus: A kapus automatikusan mozog a gólvonalon.
 
-- **`camera.c/.h`**: klasszikus FPS-kamera  
-  - Pozíció (vec3), irányvektorok (Front, Right, Up)  
-  - `Camera_ProcessKeyboard()` mozgatja előre/hátra/balra/jobra a `CAMERA_MV_*` enum szerint  
-  - `Camera_ProcessMouseMovement()` állítja a yaw/pitch értékeket (egérmozgás vagy nyilak)  
-  - `Camera_ProcessMouseScroll()` a zoom (FOV) kezelésére  
+Irányítás
 
-- **input**: a `processInput()` minden frame-ben ellenőrzi a GLFW billentyű-állapotokat, és hívja a kamera- vagy rúgásfunkciókat.
 
-### Labdafizika és ütközés
+WASD           - Kamera mozgatása (előre/hátra/jobbra/balra)
+Egér           - Kamera gyorsabb mozgatása (nézelődés)
+J / K          - Kamera elforgatása balra/jobbra
+Nyilak         - Labda célzása (felfelé/lefelé/yaw)
+SPACE          - Rúgás
++ / -          - Fényerő növelése/csökkentése
+F1             - Súgó megjelenítése
+Esc            - Kilépés a játékból
+F11            - Teljes képernyő mód váltás
+X              - Játék újraindítása
+Főbb technikai részletek
+OpenGL 3.3 Core – Saját shader loader.
 
-- **Állapot**: `vec3 ballPos`, `ballVel`  
-- **Rúgás**: ha a labda és kamera távolsága <2 egység és SPACE lenyomott, akkor a labda sebessége a kamera Front irányába kap egy impulzust:  
-  ```c
-  vec3 d = camera.Front; d.y = 0.2f; normalize(d);
-  ballVel += d * KICK_FORCE;
-Gravitáció: minden frame-ben ballVel.y -= GRAVITY * dt
+cglm – Vektor- és mátrixműveletekhez.
 
-Franciás fékezés: talajra csapódva a vel.y és vízszintes komponensek is csökkennek * -0.5, * FRICTION
+GLFW – Ablakkezelés és input.
 
-Ütközés a hálóval: ha a labda átlépi a net síkját (netZ) a kapu szélességén belül, visszapattan
+GLEW – OpenGL extension kezelés.
 
-Füst részecskerendszer
-Egyszerű tároló: statikus tömb Particle particles[MAX_PARTICLES]
+stb_image – Textúra betöltés PNG-ből.
 
-Életciklus: minden részecske kap kezdeti pozíciót, sebességet, és 1 másodperc életet
+Textúrák:
 
-Frissítés: updateSmoke(dt) csökkenti az életet, szaporítja a pozíciót, és eltávolítja a leperegteket
+assets/ball_diffuse.png – Focilabda textúra (saját generált)
 
-Kirajzolás: pontméret és átlátszó textúra shader (smoke_vertex/smoke_fragment)
+assets/stadium.png – Stadion háttér (egyszerű png)
 
-Pályaelemek és skybox
-Talaj: egy egyszerű quad (GL_TRIANGLE_FAN) a y=0 síkban, zöld fragment shaderrel
+assets/help.png – Súgókép, billentyűk listája
 
-Vonalak: büntetőterület és kapuvonal GL_LINES primitívek
+assets/keeper.png – Kapus sprite
 
-Kapu és crossbar: kis kockák (36 vertex / VAO) transzformálva posztokká és rúdá
+assets/goal.png, miss.png, win.png, lose.png – Overlay képek
 
-Skybox: (opcionális) cubemap textúra 6 oldallal; külön VAO/VBO és skybox shader
+Objektumok:
 
-Shaderek
-vertex.glsl / fragment.glsl: Phong-szerű egyszerű textúra–világítás; useTexture uniform
+Labda (OBJ modell)
 
-line_vert.glsl / line_frag.glsl: egyszínű vonal shader
+Kapufa, háló (vertex bufferrel rajzolva)
 
-ground_vert.glsl / ground_frag.glsl: zöld föld sík
+Kapus (sprite quad)
 
-smoke_vertex.glsl / smoke_fragment.glsl: pontalapú részecskerendszer, élettartam szerinti átlátszóság
+Füst (pont primitívek)
 
-skybox_vert.glsl / skybox_frag.glsl: cubemap sampling
+UI (overlay quads)
 
-Projekt struktúra
-css
+Shader-ek
+sceneSh – 3D objektumok (labda, kapufa, stb.)
 
-.
-├── assets/
-│   ├── ball_uv.obj
-│   ├── ball_diffuse.png
-│   └── skybox/
-│       ├── right.jpg
-│       ├── left.jpg
-│       ├── top.jpg
-│       ├── bottom.jpg
-│       ├── front.jpg
-│       └── back.jpg
-├── shaders/
-│   ├── vertex.glsl
-│   ├── fragment.glsl
-│   ├── line_vert.glsl
-│   ├── line_frag.glsl
-│   ├── ground_vert.glsl
-│   ├── ground_frag.glsl
-│   ├── smoke_vertex.glsl
-│   ├── smoke_fragment.glsl
-│   ├── skybox_vert.glsl
-│   └── skybox_frag.glsl
-├── src/
-│   ├── main.c
-│   ├── camera.c / camera.h
-│   ├── shader.c / shader.h
-│   ├── model.c / model.h
-│   ├── fog.c / fog.h
-│   ├── texture.c / texture.h
-│   └── collision.c / collision.h
-├── Makefile
-└── README.md
-Fordítás & futtatás
-Követelmények:
+groundSh – Fű (talaj)
 
-GLFW, GLEW, Assimp, stb (sudo apt install libglfw3-dev libglew-dev libassimp-dev)
+lineSh – Vonalak, hálók
 
-stb_image (be van ágyazva a texture.c-ben)
+uiSh – HUD, overlayek
 
-Fordítás:
+smokeSh – Füst-effekt
 
-bash
-make
+spriteSh – Kapus sprite
+
+Fordítás / Futtatás
+Fordításhoz szükséges:
+
+C fordító (pl. gcc)
+
+OpenGL 3.3+ támogatás
+
+GLFW, GLEW, stb. fejlécek és könyvtárak
+
+cglm
+
+Fordítás parancs (tipikus):
+
+gcc -Wall -O2 -std=c11 -I./src -o soccer src/main.c src/camera.c src/shader.c src/model.c src/fog.c src/texture.c -lGL -lglfw -lGLEW -lm
 Futtatás:
 
-bash
 ./app
-Vezérlés
-W/S/A/D – kamera előre/hátra/balra/jobra
+Megjegyzések
+Az összes szükséges textúra az assets mappában található
+Link: https://unimiskolchu-my.sharepoint.com/:f:/r/personal/botond_dobozi_student_uni-miskolc_hu/Documents/assets?csf=1&web=1&e=VZm42h
 
-←/→/↑/↓ – kamera forgatása (finomhangolás)
-
-SPACE – labda rúgása (ha közel vagy hozzá)
-
-ESC – kilépés
-
+Ha bármelyik textúra hiányzik, a program azt kiírja a konzolra
