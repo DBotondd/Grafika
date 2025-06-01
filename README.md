@@ -1,8 +1,11 @@
 3D Büntetőfoci – OpenGL Játék
+
 Készítette: Dobozi Botond
+
 Neptun kód: HYS4P5
 
 📝 Projekt leírása
+
 Ez a projekt egy egyszerű, de látványos 3D-s büntetőrúgó focijáték, amely OpenGL-lel, saját shaderekkel és interaktív kamerával készült. A játékos egy stadionban próbál minél több gólt lőni egy mozgó kapusnak.
 A játék tartalmaz:
 
