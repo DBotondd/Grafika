@@ -1,79 +1,79 @@
-3D Büntetőfoci – OpenGL játék
-Készítette:
-Név: Dobozi Botond
+3D Büntetőfoci – OpenGL Játék
+Készítette: Dobozi Botond
 Neptun kód: HYS4P5
 
+📝 Projekt leírása
+Ez a projekt egy egyszerű, de látványos 3D-s büntetőrúgó focijáték, amely OpenGL-lel, saját shaderekkel és interaktív kamerával készült. A játékos egy stadionban próbál minél több gólt lőni egy mozgó kapusnak.
+A játék tartalmaz:
 
-Projekt leírása
-Ez a projekt egy egyszerű 3D-s büntetőrúgó focijáték OpenGL-lel, saját shaderekkel és interaktív kamerával.
-A játékos egy stadionban találja magát, ahol a cél minél több gólt rúgni a kapusnak.
-A játék tartalmaz mozgatható kamerát, dinamikus fényerőt, animált füst-effekteket, gól/miss/győzelem/vesztés overlay-eket és segéd (help) képernyőt.
+Mozgatható kamerát
 
-Játék menete
-A labdát a játékos egy képernyőn megjelenő nyíllal célozza, majd rúgja kapura.
+Dinamikus fényerőszabályzást
 
-A kapuban egy jobbra-balra mozgó kapus található, aki próbálja hárítani a lövéseket.
+Animált füst-effekteket
 
-Ha 5 gólt rúgsz, megnyered a játékot, ha 5-öt véd a kapus, veszítesz.
+Gól/miss/győzelem/vesztés overlay-eket
 
-Füstpartikula-effekt jelenik meg gól esetén.
+Segéd (help) képernyőt
 
-Főbb funkciók
-3D modellbetöltés: A labda .obj fájlból, saját textúrával töltődik be.
+⚽ Játék menete
+Célozz a labdával a képernyőn látható nyíl segítségével.
 
-Textúrázás: Saját generált fehér-fekete „focilabda” textúra (ball_diffuse.png), illetve stadion háttér (stadium.png).
+Rúgj kapura – a kapus jobbra-balra mozog, próbál védeni.
 
-Shader-ek: Minden fő objektumhoz külön vertex/fragment shader.
+5 gól esetén nyersz, ha a kapus hárít 5-öt, veszítesz.
 
-Fényerő: A jelenet fényereje dinamikusan állítható a + és - gombokkal.
+Gól esetén füstpartikula-effekt jelenik meg.
 
-Részecske rendszer: Egyszerű füst-effekt partikularendszerrel, amikor gól születik.
+🚀 Főbb funkciók
+Funkció	Leírás
+3D modellbetöltés	Labda .obj modellből, saját textúrával
+Textúrázás	Fehér-fekete focilabda, stadion háttér
+Shader-ek	Minden fő objektumhoz saját shader
+Dinamikus fényerő	+ és - gombbal állítható
+Részecske rendszer	Egyszerű füst-effekt partikularendszerrel
+HUD & overlay	Konzolos/overlayes visszajelzések, help képernyő
+Animált kapus	Automatikusan mozog a gólvonalon
 
-HUD: Konzolos és overlayes visszajelzés az aktuális állásról, segítség overlay.
+🎮 Irányítás
+Billentyű	Funkció
+WASD	Kamera mozgatása (előre/hátra/jobbra/balra)
+Egér	Kamera gyors nézelődés
+J / K	Kamera elforgatása balra/jobbra
+Nyilak	Labda célzása (felfelé/lefelé/jobbra/balra)
+SPACE	Rúgás
++ / -	Fényerő növelése/csökkentése
+F1	Súgó megjelenítése
+Esc	Kilépés a játékból
+F11	Teljes képernyő mód váltás
+X	Játék újraindítása
 
-Animált kapus: A kapus automatikusan mozog a gólvonalon.
+🛠️ Főbb technikai részletek
+OpenGL 3.3 Core – Saját shader loader
 
-Irányítás
+cglm – Vektor- és mátrixműveletek
 
+GLFW – Ablakkezelés és input
 
-WASD           - Kamera mozgatása (előre/hátra/jobbra/balra)
-Egér           - Kamera gyorsabb mozgatása (nézelődés)
-J / K          - Kamera elforgatása balra/jobbra
-Nyilak         - Labda célzása (felfelé/lefelé/yaw)
-SPACE          - Rúgás
-+ / -          - Fényerő növelése/csökkentése
-F1             - Súgó megjelenítése
-Esc            - Kilépés a játékból
-F11            - Teljes képernyő mód váltás
-X              - Játék újraindítása
-Főbb technikai részletek
-OpenGL 3.3 Core – Saját shader loader.
+GLEW – OpenGL extension kezelés
 
-cglm – Vektor- és mátrixműveletekhez.
+stb_image – Textúra betöltés PNG-ből
 
-GLFW – Ablakkezelés és input.
+Textúrák
+Fájl	Leírás
+assets/ball_diffuse.png	Focilabda textúra
+assets/stadium.png	Stadion háttér
+assets/help.png	Súgókép, billentyűk
+assets/keeper.png	Kapus sprite
+assets/goal.png	Gól overlay
+assets/miss.png	Hibázott lövés overlay
+assets/win.png	Győzelem overlay
+assets/lose.png	Veszteség overlay
 
-GLEW – OpenGL extension kezelés.
-
-stb_image – Textúra betöltés PNG-ből.
-
-Textúrák:
-
-assets/ball_diffuse.png – Focilabda textúra (saját generált)
-
-assets/stadium.png – Stadion háttér (egyszerű png)
-
-assets/help.png – Súgókép, billentyűk listája
-
-assets/keeper.png – Kapus sprite
-
-assets/goal.png, miss.png, win.png, lose.png – Overlay képek
-
-Objektumok:
-
+Objektumok
 Labda (OBJ modell)
 
-Kapufa, háló (vertex bufferrel rajzolva)
+Kapufa, háló (vertex buffer)
 
 Kapus (sprite quad)
 
@@ -94,25 +94,24 @@ smokeSh – Füst-effekt
 
 spriteSh – Kapus sprite
 
-Fordítás / Futtatás
-Fordításhoz szükséges:
-
+⚙️ Fordítás & futtatás
+Szükséges:
 C fordító (pl. gcc)
 
 OpenGL 3.3+ támogatás
 
-GLFW, GLEW, stb. fejlécek és könyvtárak
+GLFW, GLEW fejlécek és könyvtárak
 
-cglm
+cglm könyvtár
 
-Fordítás parancs (tipikus):
+Fordítás parancs (példa):
 
 gcc -Wall -O2 -std=c11 -I./src -o soccer src/main.c src/camera.c src/shader.c src/model.c src/fog.c src/texture.c -lGL -lglfw -lGLEW -lm
 Futtatás:
 
 ./app
-Megjegyzések
-Az összes szükséges textúra az assets mappában található
-Link: https://unimiskolchu-my.sharepoint.com/:f:/r/personal/botond_dobozi_student_uni-miskolc_hu/Documents/assets?csf=1&web=1&e=VZm42h
 
-Ha bármelyik textúra hiányzik, a program azt kiírja a konzolra
+💡 Megjegyzések
+Az összes szükséges textúra az assets mappában található.
+
+Ha bármelyik textúra hiányzik, a program azt kiírja a konzolra.
