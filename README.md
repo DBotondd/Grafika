@@ -147,8 +147,6 @@ Futtatás:
 
 Az összes szükséges textúra az assets mappában található.
 
-Ha bármelyik textúra hiányzik, a program azt kiírja a konzolra.
-
-
+Link: https://unimiskolchu-my.sharepoint.com/:f:/r/personal/botond_dobozi_student_uni-miskolc_hu/Documents/assets?csf=1&web=1&e=6dlebA
 
 Ha bármelyik textúra hiányzik, a program azt kiírja a konzolra.
